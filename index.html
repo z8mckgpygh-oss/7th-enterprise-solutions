@@ -496,12 +496,62 @@
                     <li><span aria-hidden="true">📊</span> Macro &amp; Hydration Tracking</li>
                     <li><span aria-hidden="true">🎯</span> Coach Dashboard</li>
                 </ul>
-                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                    <a href="https://squadlift-app.netlify.app" target="_blank" rel="noopener noreferrer" style="background:#00d4ff; color:#000; padding:0.75rem 1.5rem; border-radius:8px; font-weight:700; text-decoration:none; flex:1; text-align:center; min-height:44px; display:flex; align-items:center; justify-content:center;">Join Waitlist<span class="sr-only"> on SquadLift (opens in new tab)</span> <span aria-hidden="true">→</span></a>
-                    <a href="https://squadlift-app.netlify.app#pricing" target="_blank" rel="noopener noreferrer" style="background:transparent; color:#00d4ff; padding:0.75rem 1.5rem; border-radius:8px; font-weight:700; text-decoration:none; border:1px solid rgba(0,212,255,0.4); flex:1; text-align:center; min-height:44px; display:flex; align-items:center; justify-content:center;">View Pricing<span class="sr-only"> for SquadLift (opens in new tab)</span></a>
+                <!-- Waitlist Form -->
+                <div id="squadlift-waitlist" style="margin-top:0.5rem;">
+                    <p style="color:#9ca3af; font-size:0.85rem; margin-bottom:1rem;">🚀 <strong style="color:#00d4ff;">Coming soon</strong> — get early access when we launch.</p>
+                    <form id="squadlift-form" action="https://formspree.io/f/REPLACE_WITH_ID" method="POST" style="display:flex; flex-direction:column; gap:0.75rem;">
+                        <input type="text" name="name" placeholder="Your name" required
+                            style="background:#1f2937; border:1px solid rgba(0,212,255,0.25); border-radius:8px; padding:0.75rem 1rem; color:#fff; font-size:0.95rem; outline:none; font-family:inherit;"
+                            onfocus="this.style.borderColor='#00d4ff'" onblur="this.style.borderColor='rgba(0,212,255,0.25)'">
+                        <input type="email" name="email" placeholder="Your email" required
+                            style="background:#1f2937; border:1px solid rgba(0,212,255,0.25); border-radius:8px; padding:0.75rem 1rem; color:#fff; font-size:0.95rem; outline:none; font-family:inherit;"
+                            onfocus="this.style.borderColor='#00d4ff'" onblur="this.style.borderColor='rgba(0,212,255,0.25)'">
+                        <input type="hidden" name="source" value="7thenterprisesolutions.com">
+                        <button type="submit" id="squadlift-submit"
+                            style="background:linear-gradient(135deg,#00c2ff,#00e5a0); color:#000; border:none; border-radius:8px; padding:0.85rem 1.5rem; font-weight:800; font-size:1rem; cursor:pointer; font-family:inherit; letter-spacing:0.02em; transition:opacity 0.2s;"
+                            onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                            Get Early Access →
+                        </button>
+                    </form>
+                    <div id="squadlift-success" style="display:none; text-align:center; padding:1.5rem; background:rgba(0,229,160,0.08); border:1px solid rgba(0,229,160,0.3); border-radius:8px;">
+                        <div style="font-size:2rem; margin-bottom:0.5rem;">🎉</div>
+                        <p style="color:#00e5a0; font-weight:700; font-size:1.05rem;">You're on the list!</p>
+                        <p style="color:#9ca3af; font-size:0.85rem; margin-top:0.25rem;">We'll reach out when SquadLift launches.</p>
+                    </div>
+                    <script>
+                        (function() {
+                            var form = document.getElementById('squadlift-form');
+                            var success = document.getElementById('squadlift-success');
+                            if (!form) return;
+                            form.addEventListener('submit', function(e) {
+                                e.preventDefault();
+                                var btn = document.getElementById('squadlift-submit');
+                                btn.textContent = 'Submitting...';
+                                btn.disabled = true;
+                                // Save to localStorage
+                                var entry = { name: form.name.value, email: form.email.value, ts: new Date().toISOString() };
+                                var existing = JSON.parse(localStorage.getItem('squadlift_waitlist') || '[]');
+                                existing.push(entry);
+                                localStorage.setItem('squadlift_waitlist', JSON.stringify(existing));
+                                // Submit to Formspree (if ID is set)
+                                var action = form.action;
+                                if (action.indexOf('REPLACE_WITH_ID') === -1) {
+                                    fetch(action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+                                        .then(function(r) { showSuccess(); })
+                                        .catch(function() { showSuccess(); });
+                                } else {
+                                    showSuccess();
+                                }
+                            });
+                            function showSuccess() {
+                                form.style.display = 'none';
+                                success.style.display = 'block';
+                            }
+                        })();
+                    </script>
                 </div>
                 <!-- #9ca3af on #111827 = 8.2:1 — passes WCAG AA -->
-                <p style="color:#9ca3af; font-size:0.8rem; margin-top:1rem; text-align:center;">Free forever tier available. No credit card needed.</p>
+                <p style="color:#6b7280; font-size:0.75rem; margin-top:0.75rem; text-align:center;">Free forever tier available. No credit card needed.</p>
             </div>
             <!-- When 911 Can't Come Book Card -->
             <div style="background:#111827; border:1px solid rgba(255,107,53,0.2); border-radius:16px; padding:2.5rem; max-width:480px; flex:1; min-width:280px; box-shadow:0 8px 32px rgba(255,107,53,0.08);">
@@ -669,9 +719,10 @@
                 <a href="#services">Services</a>
                 <a href="#why-us">About</a>
                 <a href="mailto:7th_enterprise_solutions@agentmail.to">Contact</a>
+                <a href="/privacy.html">Privacy Policy</a>
             </div>
         </nav>
-        <p>&copy; 2026 7th Enterprise Solutions. All rights reserved.</p>
+        <p>&copy; 2026 7th Enterprise Solutions, LLC. All rights reserved.</p>
     </div>
 </footer>
 
